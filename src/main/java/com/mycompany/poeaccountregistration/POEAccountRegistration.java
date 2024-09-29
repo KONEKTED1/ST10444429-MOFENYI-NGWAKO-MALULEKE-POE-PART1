@@ -9,7 +9,7 @@ import java.util.*;
  * @author ST10444429 MOFENYI NGWAKO MALULEKE GR01
  */
 public class POEAccountRegistration {
-    //GitHub repository is :
+    
     
     public static void main(String[] args) {
         //Declarations
