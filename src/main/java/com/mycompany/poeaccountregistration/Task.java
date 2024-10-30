@@ -19,6 +19,8 @@ public class Task {
     private String taskID;
 
     public Task(String taskName, String taskDescription, String developerDetails, int taskDuration, String taskStatus, int taskNumber) {
+        
+        //The this. keyword refers to the current object in a method or constructor.
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.developerDetails = developerDetails;
@@ -37,7 +39,7 @@ public class Task {
         String developerPart = developerDetails.length() >= 3 ? developerDetails.substring(developerDetails.length() - 3).toUpperCase() : developerDetails.toUpperCase();
         return taskNamePart + ":" + taskNumber + ":" + developerPart;
     }
-    //method displays task features 
+    // This method will display the task details
     public String printTaskDetails() {
         return "Task Status: " + taskStatus + "\n" +
                "Developer Details: " + developerDetails + "\n" +
@@ -47,7 +49,7 @@ public class Task {
                "Task ID: " + taskID + "\n" +
                "Task Duration: " + taskDuration + " hours";
     }
-       // method returns task duration 
+       // This method will return task duration 
     public int getTaskDuration() {
         return taskDuration;
     }

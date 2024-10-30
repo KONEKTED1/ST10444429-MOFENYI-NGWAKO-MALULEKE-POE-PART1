@@ -20,7 +20,7 @@ public class POEAccountRegistration {
         String firstName, lastName, username, password;
         Scanner log = new Scanner(System.in);
         //Initiate the class object 
-        Login ext = new Login();
+        Login ext = new Login("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden");
         
         //Prompting for user input
         System.out.println("Enter your first name: ");
@@ -58,7 +58,7 @@ public class POEAccountRegistration {
           dialog.setAlwaysOnTop(true);    
           
           
-          // The application will display a welcome message 
+          // The application will display a "Dashboard" welcome message. 
         JOptionPane.showMessageDialog(dialog, "Welcome to EasyKanban");
         
        
@@ -79,7 +79,7 @@ public class POEAccountRegistration {
                     JOptionPane.showMessageDialog(dialog, "Coming Soon");
                     break;
                 case 3:
-                    JOptionPane.showMessageDialog(dialog, "Exiting...");
+                    JOptionPane.showMessageDialog(dialog, "QUITing");
                     System.exit(0);
                     break;
                 default:
@@ -98,17 +98,21 @@ public class POEAccountRegistration {
         String numTasksInput = JOptionPane.showInputDialog(dialog,"How many tasks would you like to enter?");
         int numTasks = Integer.parseInt(numTasksInput);
         
-        //FOR loop 
-
+        //FOR loop to reiterate the user to enter the "Task" Name and Description 
+        
         for (int i = 0; i < numTasks; i++) {
             String taskName = JOptionPane.showInputDialog(dialog,"Enter Task Name:");
-            String taskDescription = JOptionPane.showInputDialog(dialog,"Enter Task Description:");
+            
+            String taskDescription = JOptionPane.showInputDialog(dialog,"Enter Task Description, task description should beless than 50 characters:");
+            
             if (taskDescription.length() > 50) {
+                
                 JOptionPane.showMessageDialog(dialog, "Please enter a task description of less than 50 characters");
                 i--; 
                 continue;
             }
-
+            
+                // Method displaying a dashboard entailing developer details 
             String developerDetails = JOptionPane.showInputDialog(dialog,"Enter Developer Details (First and Last Name):");
             int taskDuration = Integer.parseInt(JOptionPane.showInputDialog(dialog,"Enter Task Duration (in hours):"));
             String[] statusOptions = {"To Do", "Done", "Doing"};
@@ -125,7 +129,7 @@ public class POEAccountRegistration {
         
         
         
-       
+     
         
     }
 }
