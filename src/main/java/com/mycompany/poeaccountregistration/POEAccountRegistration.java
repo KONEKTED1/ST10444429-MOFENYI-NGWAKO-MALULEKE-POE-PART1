@@ -3,133 +3,115 @@
  */
 
 package com.mycompany.poeaccountregistration;
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 /**
  *
  * @author ST10444429 MOFENYI NGWAKO MALULEKE GR01
  */
 public class POEAccountRegistration {
-   
-        private static boolean loggedIn = false;
-        private static final ArrayList<Task> tasks = new ArrayList<>();
+   private static final Login login = new Login();
+    private static final Task taskManager = new Task();
+     
     
     public static void main(String[] args) {
-        //Declarations
-        String firstName, lastName, username, password;
-        Scanner log = new Scanner(System.in);
-        //Initiate the class object 
-        Login ext = new Login("kyl_1", "Ch&&sec@ke99!", "Kyle", "Buden");
-        
-        //Prompting for user input
-        System.out.println("Enter your first name: ");
-        firstName = log.next();
-        System.out.println("Enter your last name: ");
-        lastName = log.next();
-        System.out.println("Create a new username: ");
-        username = log.next();
-        System.out.println("Create a new password: ");
-        password = log.next();
-        
-        //Register user
-        ext.registerUser(username, password, firstName, lastName);
-        
-        // Ask for login
-        System.out.println("\nPlease log in to your account.");
-        System.out.println("Enter username, please ensure the username contains an underscore and is no more than 5 characters in length : ");
-        String loginUsername = log.next();
 
-        System.out.println("Enter password, Please ensure that the password contains at least 8 characters, a capital letter, a number, and a special character  : ");
-        String loginPassword;
-        loginPassword = log.next();
-        
-        // Check login status
-        ext.returnLoginStatus(loginUsername, loginPassword);
-          
-        
-        log.close();
-        
-         //ADDING TASK FEATURES: POE PART 2 STARTS HERE.............
-         
-         
-         //Method will ensure that the dialog will always appear on top 
-          final JDialog dialog = new JDialog();
-          dialog.setAlwaysOnTop(true);    
-          
-          
-          // The application will display a "Dashboard" welcome message. 
-        JOptionPane.showMessageDialog(dialog, "Welcome to EasyKanban");
-        
        
+        // Register login calls the method that handles user registration and login process
+        registerAndLogin();
 
-        while (true) {
-            String input = JOptionPane.showInputDialog(dialog,"Choose an option:\n1) Add tasks\n2) Show report\n3) Quit");
-             //parseInt is used to convert a string that represents a decimal number into an integer
-            int choice = Integer.parseInt(input);
-    
-            
-            // switch case method displaying numeric menu feature
-
-            switch (choice) {
-                case 1:
-                    addTasks(dialog);
-                    break;
-                case 2:
-                    JOptionPane.showMessageDialog(dialog, "Coming Soon");
-                    break;
-                case 3:
-                    JOptionPane.showMessageDialog(dialog, "QUITing");
-                    System.exit(0);
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(dialog, "Invalid option, please choose again.");
-            }
-            
-              dialog. dispose();
-        }
         
+        // If the user is successfully logged in, show the main menu
+        if (login.isLoggedIn()) {
+            showMainMenu();
+        }
     }
-    
-    
-    
-         // The application will prompt for task length
-    private static void addTasks(JDialog dialog) {
-        String numTasksInput = JOptionPane.showInputDialog(dialog,"How many tasks would you like to enter?");
-        int numTasks = Integer.parseInt(numTasksInput);
+    // This method handles both the registration and login process
+    private static void registerAndLogin() {
         
-        //FOR loop to reiterate the user to enter the "Task" Name and Description 
-        
-        for (int i = 0; i < numTasks; i++) {
-            String taskName = JOptionPane.showInputDialog(dialog,"Enter Task Name:");
-            
-            String taskDescription = JOptionPane.showInputDialog(dialog,"Enter Task Description, task description should beless than 50 characters:");
-            
-            if (taskDescription.length() > 50) {
-                
-                JOptionPane.showMessageDialog(dialog, "Please enter a task description of less than 50 characters");
-                i--; 
-                continue;
-            }
-            
-                // Method displaying a dashboard entailing developer details 
-            String developerDetails = JOptionPane.showInputDialog(dialog,"Enter Developer Details (First and Last Name):");
-            int taskDuration = Integer.parseInt(JOptionPane.showInputDialog(dialog,"Enter Task Duration (in hours):"));
-            String[] statusOptions = {"To Do", "Done", "Doing"};
-            String taskStatus = (String) JOptionPane.showInputDialog(dialog, "Select Task Status:", "Task Status", JOptionPane.QUESTION_MESSAGE, null, statusOptions, statusOptions[0]);
-
-            Task task = new Task(taskName, taskDescription, developerDetails, taskDuration, taskStatus, tasks.size());
-            tasks.add(task);
-
-            JOptionPane.showMessageDialog(dialog, task.printTaskDetails());
-        }
-
-        int totalHours = tasks.stream().mapToInt(Task::getTaskDuration).sum();
-        JOptionPane.showMessageDialog(dialog, "Total Task Duration: " + totalHours + " hours");
-        
-        
+        // Prompt user to enter their first name, last name, username, and password
+        // and pass them to the registration method.
+        String firstName = JOptionPane.showInputDialog("Enter first name:");
+        String lastName = JOptionPane.showInputDialog("Enter last name:");
+        String username = JOptionPane.showInputDialog("Enter username (max 5 chars, includes '_'):");
+        String password = JOptionPane.showInputDialog("Enter password (min 8 chars, includes uppercase, number, special char):");
+        login.registerUser(firstName, lastName, username, password);
         
      
+         // If the user is not logged in after registration, prompt for login details
+        if (!login.isLoggedIn()) {
+            String loginUsername = JOptionPane.showInputDialog("Enter username to log in:");
+            String loginPassword = JOptionPane.showInputDialog("Enter password:");
+            login.loginUser(loginUsername, loginPassword);
+        }
+    }
+    // This method displays the main menu and allows the user to choose an action
+    private static void showMainMenu() {
+          // This loop will keep showing the menu until the user chooses to quit
+        while (true) {
+           // These are the available options in the menu
+            String[] options = {"1. Add Task", "2. Show Report", "3. Search Task by Name", "4. Delete Task by Name", "5. Search Tasks by Developer", "6. Display Tasks with Status Done", "7. Display Longest Task","8. Quit"};
+             // Show a dialog to let the user select an option
+            String choice = (String) JOptionPane.showInputDialog(null, "Welcome to EasyKanban! Choose an option:", "Main Menu",
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            
+            // If the user chooses to quit, display a message and exit the loop
+            if (choice == null || choice.equals("8. Quit")) {
+                JOptionPane.showMessageDialog(null, "Exiting the application.");
+                break;
+            }
+            
+            // Based on the user's choice, call the appropriate method
+         switch (choice) {
+                case "1. Add Task" -> addTask(); // Call the method to add a task
+                case "2. Show Report" -> taskManager.displayAllTasksReport();// Show all tasks report
+                case "3. Search Task by Name" -> searchTaskByName(); // Search a task by name
+                case "4. Delete Task by Name" -> deleteTaskByName(); // Delete a task by name
+                case "5. Search Tasks by Developer" -> searchTasksByDeveloper(); // Search tasks by developer name
+                case "6. Display Tasks with Status Done" -> taskManager.displayDoneTasks(); // Show tasks marked as "Done"
+                case "7. Display Longest Task" -> taskManager.displayLongestTask(); // Show the task with the longest duration
+                default -> JOptionPane.showMessageDialog(null, "Invalid option. Please choose again."); // Show message for invalid options
+            }
+        }
+    }
+    
+     // This method handles adding a new task
+    private static void addTask() {
+        // Ask user to input developer's name, task name, task description, and duration
+        String developer = JOptionPane.showInputDialog("Enter developer's full name:");
+        String taskName = JOptionPane.showInputDialog("Enter task name:");
+        String taskDescription = JOptionPane.showInputDialog("Enter task description (max 50 chars):");
+        // Check if task description exceeds the character limit of 50
+        if (taskDescription.length() > 50) {
+            JOptionPane.showMessageDialog(null, "Task description is too long. Must be under 50 characters.");
+            return;
+        }
+    // Ask for the task duration (how many hours the task will take)
+     int duration = Integer.parseInt(JOptionPane.showInputDialog("Enter task duration (in hours):"));
+     
+     // Offer predefined status options for the task
+        String[] statuses = {"To Do", "Doing", "Done"};
+        String status = (String) JOptionPane.showInputDialog(null, "Select Task Status:", "Task Status", JOptionPane.QUESTION_MESSAGE, null, statuses, statuses[0]);
         
+    // Add the task to the task manager using the provided details
+        taskManager.addTask(developer, taskName, taskDescription, duration, status);
+    }
+    // This method allows the user to search for a task by its name
+    private static void searchTaskByName() {
+        String taskName = JOptionPane.showInputDialog("Enter task name to search:");
+        taskManager.searchTaskByName(taskName);
+    }
+     // This method allows the user to delete a task by its name
+    private static void deleteTaskByName() {
+        String taskName = JOptionPane.showInputDialog("Enter task name to delete:");
+        taskManager.deleteTaskByName(taskName);
+    }
+    
+     // This method allows the user to search for tasks by the developer's name
+    private static void searchTasksByDeveloper() {
+        String taskDeveloper = JOptionPane.showInputDialog("Enter task Developer to search for his tasks:");
+        taskManager.searchTasksByDeveloper(taskDeveloper);
     }
 }
+
+    
+
